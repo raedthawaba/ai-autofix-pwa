@@ -1,0 +1,54 @@
+[
+  {
+    "query": "Step by step instructions for changing deployment branch in Vercel",
+    "image_info": {
+      "url": "https://vercel.com/vc-ap-vercel-marketing/_next/image?url=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Fcontentful%2Fimage%2Fe5382hct74si%2FaVQTP69PLcO5Fa39gmbsR%2F1f61f859e59405124cf7395f42499b66%2Fproject-setting.png&w=1920&q=75",
+      "img_format": "PNG",
+      "mode": "P",
+      "file_size": 42443,
+      "width": 1728,
+      "height": 776,
+      "total_pixels": 1340928,
+      "basic_score": 0.8515755351193259,
+      "file_name": "vercel-production-deployment-branch-settings.png"
+    },
+    "llm_score": {
+      "success": true,
+      "relevance_score": 95.0,
+      "clarity_score": 100.0,
+      "watermark_score": 100.0,
+      "overall_score": 95.0,
+      "explanation": "The image is highly relevant to both the search query and the prompt. It clearly shows a 'Production Branch' configuration screen, which is precisely where one would change the deployment branch in a platform like Vercel. The text 'every commit pushed to the main branch will trigger a Production Deployment' and the 'SELECT BRANCH' dropdown directly address the core of the query. The image quality is excellent, with sharp text and clear UI elements. While it doesn't show the 'master' option or the full step-by-step, it represents a crucial and clear step in the process.",
+      "file_name": "vercel-production-deployment-branch-settings.png",
+      "caption": "A screenshot of a 'Production Branch' configuration dialog, typically found in continuous deployment platforms like Vercel. The dialog explains that commits to the 'main' branch trigger production deployments and features a 'SELECT BRANCH' dropdown, currently showing 'main', allowing users to change the primary deployment branch. A 'Save' button is visible at the bottom right.",
+      "recommend": true,
+      "error": ""
+    }
+  },
+  {
+    "query": "Step by step instructions for changing deployment branch in Vercel",
+    "image_info": {
+      "url": "https://images.ctfassets.net/e5382hct74si/4u0QuPtORhE9KzwkBLyilK/b5f97bad6e90355b9f62fa81921ea41b/Toolbar_Branch_Switcher.jpg",
+      "img_format": "JPEG",
+      "mode": "RGB",
+      "file_size": 297397,
+      "width": 1600,
+      "height": 900,
+      "total_pixels": 1440000,
+      "basic_score": 0.9056763951259091,
+      "file_name": "vercel_branch_management_ui_search_interface.jpg"
+    },
+    "llm_score": {
+      "success": true,
+      "relevance_score": 85.0,
+      "clarity_score": 95.0,
+      "watermark_score": 100.0,
+      "overall_score": 90.0,
+      "explanation": "The image clearly depicts a Vercel UI component focused on branch management, featuring a 'Search Branches...' field and a list of branches. This is highly relevant to a query about changing deployment branches in Vercel, as it shows the interface where such actions would likely be initiated or managed. While it doesn't provide step-by-step instructions directly, it's a critical visual component for understanding branch operations within Vercel. The image is exceptionally clear with no watermarks.",
+      "file_name": "vercel_branch_management_ui_search_interface.jpg",
+      "caption": "A screenshot of the Vercel user interface, displaying a modal or dropdown for branch management. The interface prominently features a 'Search Branches...' input field at the top, along with two grey tabs labeled 'Vercel Toolbar' and 'Branches'. Below the search bar, a list of development branches is visible, each with a status dot, branch name (e.g., 'Add Conf banner', 'New Homepage', 'Geist Redux'), an ID number, and associated details like commit counts, user avatars, and status indicators. A floating, dark-themed toolbar with various icons is positioned at the bottom center of the interface.",
+      "recommend": true,
+      "error": ""
+    }
+  }
+]
