@@ -1,8 +1,8 @@
 workflows:
   react-pwa-build:
     name: React PWA Build for APK
-    max_build_duration: 20
-    instance_type: linux_x2
+    max_build_duration: 15
+    instance_type: linux
     environment:
       node: 18
       npm: 8
