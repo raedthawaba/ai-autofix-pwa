@@ -1,0 +1,50 @@
+workflows:
+  react-pwa-build:
+    name: React PWA Build for APK
+    max_build_duration: 20
+    instance_type: linux_x2
+    environment:
+      node: 18
+      npm: 8
+    scripts:
+      - name: Install global tools
+        script: |
+          npm install -g cordova @ionic/cli
+          
+      - name: Check project structure
+        script: |
+          pwd
+          ls -la
+          ls -la frontend/
+          
+      - name: Install frontend dependencies  
+        script: |
+          cd frontend
+          npm ci
+          
+      - name: Build React PWA
+        script: |
+          cd frontend
+          npm run build
+          
+      - name: Create Cordova project
+        script: |
+          cordova create myapp com.yourapp.pwa "AI Auto Fix PWA"
+          
+      - name: Copy PWA files to Cordova
+        script: |
+          rm -rf myapp/www/*
+          cp -r frontend/build/* myapp/www/
+          
+      - name: Configure Android
+        script: |
+          cd myapp
+          cordova platform add android@12
+          
+      - name: Build APK
+        script: |
+          cd myapp
+          cordova build android --release
+          
+    artifacts:
+      - myapp/platforms/android/app/build/outputs/apk/release/*.apk
