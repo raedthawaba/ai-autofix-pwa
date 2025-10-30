@@ -1,0 +1,73 @@
+workflows:
+  react-pwa-to-apk:
+    name: React PWA to APK
+    max_build_duration: 25
+    instance_type: linux_x2
+    environment:
+      node: 18
+      npm: 8
+    artifacts:
+      - myapp/platforms/android/app/build/outputs/apk/release/*.apk
+      - build/apk-release/
+    scripts:
+      - name: Check Node version
+        script: node --version && npm --version
+        
+      - name: Install global tools
+        script: |
+          npm install -g cordova@12 @ionic/cli cordova-res
+          
+      - name: Setup project
+        script: |
+          # Create Cordova project if not exists
+          if [ ! -d "myapp" ]; then
+            cordova create myapp com.yourapp.pwa "AI Auto Fix PWA"
+          fi
+          
+      - name: Install frontend dependencies
+        script: |
+          cd frontend
+          npm ci
+          
+      - name: Build React PWA
+        script: |
+          cd frontend
+          npm run build
+          
+      - name: Copy build files to Cordova
+        script: |
+          # Remove old www content
+          rm -rf myapp/www/*
+          
+          # Copy new build files
+          cp -r frontend/build/* myapp/www/
+          
+          # Ensure proper file structure
+          ls -la myapp/www/
+          
+      - name: Configure Cordova for Android
+        script: |
+          cd myapp
+          
+          # Add Android platform
+          cordova platform add android@12
+          
+          # Configure Android settings
+          # Enable webview debugging
+          cordova plugin add cordova-plugin-webview
+          
+      - name: Build APK
+        script: |
+          cd myapp
+          
+          # Build release APK
+          cordova build android --release --verbose
+          
+          # Copy APK to artifacts
+          mkdir -p ../build/apk-release
+          cp platforms/android/app/build/outputs/apk/release/app-release.apk ../build/apk-release/ai-autofix-pwa.apk
+          
+      - name: Verify APK
+        script: |
+          ls -la build/apk-release/
+          file build/apk-release/ai-autofix-pwa.apk

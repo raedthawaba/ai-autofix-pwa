@@ -38,7 +38,8 @@
     "eject": "react-scripts eject",
     "analyze": "npm run build && npx serve -s build",
     "test:lighthouse": "npm run build && npx http-server build -p 5000",
-    "generate:icons": "node ../generate_icons.js"
+    "generate:icons": "node ../generate_icons.js",
+    "build:apk": "npm run build && echo '✅ Build completed! Ready for APK conversion via CodeMagic'"
   },
   "eslintConfig": {
     "extends": [
