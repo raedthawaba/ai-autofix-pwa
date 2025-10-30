@@ -1,30 +1,23 @@
 workflows:
-  react-pwa-to-apk:
-    name: React PWA to APK
-    max_build_duration: 25
+  react-pwa-build:
+    name: React PWA Build for APK
+    max_build_duration: 20
     instance_type: linux_x2
     environment:
       node: 18
       npm: 8
-    artifacts:
-      - myapp/platforms/android/app/build/outputs/apk/release/*.apk
-      - build/apk-release/
     scripts:
-      - name: Check Node version
-        script: node --version && npm --version
-        
       - name: Install global tools
         script: |
-          npm install -g cordova@12 @ionic/cli cordova-res
+          npm install -g cordova @ionic/cli
           
-      - name: Setup project
+      - name: Check project structure
         script: |
-          # Create Cordova project if not exists
-          if [ ! -d "myapp" ]; then
-            cordova create myapp com.yourapp.pwa "AI Auto Fix PWA"
-          fi
+          pwd
+          ls -la
+          ls -la frontend/
           
-      - name: Install frontend dependencies
+      - name: Install frontend dependencies  
         script: |
           cd frontend
           npm ci
@@ -34,40 +27,24 @@ workflows:
           cd frontend
           npm run build
           
-      - name: Copy build files to Cordova
+      - name: Create Cordova project
         script: |
-          # Remove old www content
-          rm -rf myapp/www/*
+          cordova create myapp com.yourapp.pwa "AI Auto Fix PWA"
           
-          # Copy new build files
+      - name: Copy PWA files to Cordova
+        script: |
+          rm -rf myapp/www/*
           cp -r frontend/build/* myapp/www/
           
-          # Ensure proper file structure
-          ls -la myapp/www/
-          
-      - name: Configure Cordova for Android
+      - name: Configure Android
         script: |
           cd myapp
-          
-          # Add Android platform
           cordova platform add android@12
-          
-          # Configure Android settings
-          # Enable webview debugging
-          cordova plugin add cordova-plugin-webview
           
       - name: Build APK
         script: |
           cd myapp
+          cordova build android --release
           
-          # Build release APK
-          cordova build android --release --verbose
-          
-          # Copy APK to artifacts
-          mkdir -p ../build/apk-release
-          cp platforms/android/app/build/outputs/apk/release/app-release.apk ../build/apk-release/ai-autofix-pwa.apk
-          
-      - name: Verify APK
-        script: |
-          ls -la build/apk-release/
-          file build/apk-release/ai-autofix-pwa.apk
+    artifacts:
+      - myapp/platforms/android/app/build/outputs/apk/release/*.apk
