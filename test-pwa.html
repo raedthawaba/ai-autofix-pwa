@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Auto-Fix PWA - Test Demo</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#1f2937" />
+    <meta name="background-color" content="#ffffff" />
+    <meta name="description" content="Test PWA for AI-powered GitHub integration and CI/CD automation" />
+    <meta name="keywords" content="GitHub, CI/CD, automation, AI, auto-fix, PWA" />
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==" />
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;AI Auto-Fix PWA&quot;,&quot;short_name&quot;:&quot;AutoFix&quot;,&quot;description&quot;:&quot;AI-powered GitHub integration and CI/CD automation&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;orientation&quot;:&quot;portrait&quot;,&quot;theme_color&quot;:&quot;#1f2937&quot;,&quot;background_color&quot;:&quot;#ffffff&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/png&quot;}]}" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            direction: rtl;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .install-section {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .install-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .install-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .install-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        
+        .connection-status.online {
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+        
+        .connection-status.offline {
+            background: rgba(255, 87, 34, 0.9);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .connection-status {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        .pwa-prompt {
+            background: rgba(33, 150, 243, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            position: relative;
+        }
+        
+        .pwa-prompt.show {
+            display: block;
+        }
+        
+        .pwa-prompt button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Connection Status Indicator -->
+    <div class="connection-status" id="connectionStatus">
+        🔗 جاري التحقق...
+    </div>
+    
+    <!-- PWA Install Prompt -->
+    <div class="pwa-prompt" id="pwaPrompt">
+        <strong>📱 تثبيت التطبيق</strong><br>
+        قم بتثبيت AI Auto-Fix للحصول على أفضل تجربة وأداء أسرع
+        <button onclick="installPWA()">تثبيت</button>
+        <button onclick="dismissPWA()">إخفاء</button>
+    </div>
+    
+    <div class="container">
+        <div class="logo">🤖</div>
+        
+        <h1>AI Auto-Fix</h1>
+        <p class="subtitle">Progressive Web App - أداة ذكية لأتمتة GitHub وإصلاح الأخطاء تلقائياً</p>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔗</div>
+                <div class="feature-title">تكامل GitHub المتقدم</div>
+                <div class="feature-desc">ربط تلقائي مع مستودعات GitHub ومراقبة الأحداث في الوقت الفعلي</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-title">تشغيل البناء التلقائي</div>
+                <div class="feature-desc">دعم منصات CI/CD متعددة (GitHub Actions, Codemagic, CircleCI)</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-title">إصلاح الأخطاء بالذكاء الاصطناعي</div>
+                <div class="feature-desc">تحليل الأخطاء تلقائياً واقتراح حلول ذكية مع إنشاء Pull Requests</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title">تطبيق PWA متقدم</div>
+                <div class="feature-desc">قابل للتثبيت على جميع الأجهزة مع عمل بدون إنترنت</div>
+            </div>
+        </div>
+        
+        <div class="install-section">
+            <h3>🎯 اختبار PWA</h3>
+            <p>تأكد من عمل جميع ميزات PWA في هذا التطبيق التجريبي</p>
+            
+            <button class="install-button" onclick="checkPWAFeatures()">
+                🔍 فحص ميزات PWA
+            </button>
+            
+            <button class="install-button" onclick="testNotifications()">
+                📢 اختبار الإشعارات
+            </button>
+            
+            <button class="install-button" onclick="testOfflineMode()">
+                🌐 اختبار الوضع بدون إنترنت
+            </button>
+            
+            <div class="status" id="pwaStatus">
+                جاهز لاختبار PWA...
+            </div>
+        </div>
+        
+        <div class="install-section">
+            <h3>📊 معلومات النظام</h3>
+            <div id="systemInfo" class="status">
+                جاري جمع معلومات النظام...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+        const pwaPrompt = document.getElementById('pwaPrompt');
+        const connectionStatus = document.getElementById('connectionStatus');
+        
+        // Service Worker Registration (simplified)
+        if ('serviceWorker' in navigator) {
+            console.log('✅ Service Worker support detected');
+            // Note: In a real PWA, we would register the actual service worker here
+        }
+        
+        // PWA Install Prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            pwaPrompt.classList.add('show');
+            console.log('📱 PWA install prompt available');
+        });
+        
+        // Install PWA function
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        updateStatus('✅ تم تثبيت PWA بنجاح!');
+                    } else {
+                        updateStatus('❌ تم إلغاء تثبيت PWA');
+                    }
+                    deferredPrompt = null;
+                    pwaPrompt.classList.remove('show');
+                });
+            } else {
+                updateStatus('ℹ️ تثبيت PWA غير متاح في هذا المتصفح');
+            }
+        }
+        
+        // Dismiss PWA prompt
+        function dismissPWA() {
+            pwaPrompt.classList.remove('show');
+            localStorage.setItem('pwa-dismissed', 'true');
+        }
+        
+        // Check if PWA prompt was dismissed
+        if (localStorage.getItem('pwa-dismissed')) {
+            pwaPrompt.classList.remove('show');
+        }
+        
+        // Connection Status
+        function updateConnectionStatus() {
+            if (navigator.onLine) {
+                connectionStatus.textContent = '🟢 متصل';
+                connectionStatus.className = 'connection-status online';
+            } else {
+                connectionStatus.textContent = '🔴 غير متصل';
+                connectionStatus.className = 'connection-status offline';
+            }
+        }
+        
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        updateConnectionStatus();
+        
+        // PWA Features Test
+        function checkPWAFeatures() {
+            const features = [];
+            
+            // Service Worker support
+            if ('serviceWorker' in navigator) {
+                features.push('✅ Service Worker متوفر');
+            } else {
+                features.push('❌ Service Worker غير متوفر');
+            }
+            
+            // Push API
+            if ('PushManager' in window) {
+                features.push('✅ Push API متوفر');
+            } else {
+                features.push('❌ Push API غير متوفر');
+            }
+            
+            // Notifications
+            if ('Notification' in window) {
+                features.push('✅ Notifications API متوفر');
+            } else {
+                features.push('❌ Notifications API غير متوفر');
+            }
+            
+            // Web App Manifest
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                features.push('✅ Web App Manifest معروف');
+            } else {
+                features.push('ℹ️ Web App Manifest سيتم التحقق عند التسجيل');
+            }
+            
+            // Before Install Prompt
+            if (deferredPrompt) {
+                features.push('✅ Install Prompt جاهز');
+            } else {
+                features.push('ℹ️ Install Prompt غير متاح حالياً');
+            }
+            
+            updateStatus(features.join('<br>'));
+        }
+        
+        // Test Notifications
+        function testNotifications() {
+            if ('Notification' in window) {
+                if (Notification.permission === 'granted') {
+                    new Notification('AI Auto-Fix PWA', {
+                        body: 'اختبار إشعار من PWA! 🎉',
+                        icon: '/icons/icon-192x192.png',
+                        badge: '/icons/icon-72x72.png'
+                    });
+                    updateStatus('✅ تم إرسال إشعار تجريبي بنجاح');
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then((permission) => {
+                        if (permission === 'granted') {
+                            testNotifications();
+                        } else {
+                            updateStatus('❌ تم رفض إذن الإشعارات');
+                        }
+                    });
+                } else {
+                    updateStatus('❌ إذن الإشعارات مرفوض');
+                }
+            } else {
+                updateStatus('❌ متصفحك لا يدعم الإشعارات');
+            }
+        }
+        
+        // Test Offline Mode
+        function testOfflineMode() {
+            updateStatus('🌐 اختبار الوضع بدون إنترنت...');
+            
+            // Simulate offline by temporarily going offline
+            const wasOnline = navigator.onLine;
+            
+            // Check if app works offline (simplified test)
+            if (localStorage.getItem('test-data')) {
+                updateStatus('✅ البيانات محفوظة محلياً - يعمل بدون إنترنت');
+            } else {
+                // Save some test data
+                localStorage.setItem('test-data', JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    message: 'بيانات اختبار PWA'
+                }));
+                updateStatus('✅ تم حفظ البيانات محلياً - جاهز للوضع بدون إنترنت');
+            }
+            
+            if (!wasOnline) {
+                updateConnectionStatus();
+            }
+        }
+        
+        // Update status function
+        function updateStatus(message) {
+            document.getElementById('pwaStatus').innerHTML = message;
+        }
+        
+        // System Information
+        function updateSystemInfo() {
+            const info = [];
+            
+            // User Agent
+            info.push(`🖥️ المتصفح: ${navigator.userAgent.split(' ').slice(-2).join(' ')}`);
+            
+            // Screen info
+            info.push(`📐 الشاشة: ${screen.width}x${screen.height}`);
+            
+            // Connection info
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
+                info.push(`📶 الاتصال: ${connection.effectiveType} (${connection.downlink} Mbps)`);
+            }
+            
+            // Storage info
+            if ('storage' in navigator && navigator.storage.estimate) {
+                navigator.storage.estimate().then(estimate => {
+                    const used = (estimate.usage / (1024 * 1024)).toFixed(2);
+                    const quota = (estimate.quota / (1024 * 1024)).toFixed(2);
+                    info.push(`💾 التخزين: ${used} MB / ${quota} MB`);
+                    document.getElementById('systemInfo').innerHTML = info.join('<br>');
+                });
+            } else {
+                document.getElementById('systemInfo').innerHTML = info.join('<br>');
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSystemInfo();
+            updateStatus('🚀 PWA جاهز للاختبار! جرب جميع الميزات أعلاه.');
+            
+            // Auto-check PWA features after 2 seconds
+            setTimeout(checkPWAFeatures, 2000);
+        });
+        
+        // Handle app install
+        window.addEventListener('appinstalled', () => {
+            console.log('🎉 PWA was installed');
+            updateStatus('🎉 تم تثبيت التطبيق بنجاح!');
+            pwaPrompt.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
